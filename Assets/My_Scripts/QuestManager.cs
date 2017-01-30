@@ -63,8 +63,7 @@ public class QuestManager : MonoBehaviour {
 	public void ShowQuestInfo(Quest quest){
 		//Show Quest Info Panel
 		UIManager.instance.questInfo.gameObject.SetActive(true);
-		//Show/Hide accept Button depending on "do we have this quest?".
-		UIManager.instance.questInfoAcceptButton.gameObject.SetActive(!PlayerData.activeQuests.ContainsKey(quest.id));
+
 
 		//Hide the complete button. It will be opened by the NPC if appropriate
 		UIManager.instance.questInfoCompleteButton.gameObject.SetActive(false);
@@ -83,13 +82,15 @@ public class QuestManager : MonoBehaviour {
 		//TASK
 		string taskString = "Task:\n";
 		if(quest.task.kills != null){
+			int killIndex = 0;
 			foreach(Quest.QuestKill qk in quest.task.kills){
 				//Current kills is zero when we haven't taken the quest.
 				int currentKills = 0;
-				if(PlayerData.monstersKilled.ContainsKey(qk.id))
+				if(PlayerData.activeQuests.ContainsKey(quest.id) && PlayerData.monstersKilled.ContainsKey(qk.id))
 					//if we are showing the info during the progress of the quest (we took it already) show the progress.
-					currentKills = PlayerData.monstersKilled[qk.id].amount - PlayerData.activeQuests[quest.id].kills[qk.id].initialAmount;
+					currentKills = PlayerData.monstersKilled[qk.id].amount - PlayerData.activeQuests[quest.id].kills[killIndex].initialAmount;
 				taskString += "Slay " + (currentKills) + "/" + qk.amount + " " + MonsterDatabase.monsters[qk.id] + ".\n";
+				killIndex++;
 			}
 		}
 		if(quest.task.items != null){
@@ -136,11 +137,12 @@ public class QuestManager : MonoBehaviour {
 		//If there is at least one kill that we are required to do.
 		if(quest.task.kills.Length > 0){
 			//Foreach kill that we must do
+			int killIndex = 0;
 			foreach(var questKill in quest.task.kills){
-				if(!PlayerData.monstersKilled.ContainsKey(questKill.id)){
+				if(!PlayerData.monstersKilled.ContainsKey(questKill.id) || !PlayerData.activeQuests.ContainsKey(quest.id)){
 					return false;
 				}
-				int currentKills = PlayerData.monstersKilled[questKill.id].amount - PlayerData.activeQuests[quest.id].kills[questKill.id].initialAmount;
+				int currentKills = PlayerData.monstersKilled[questKill.id].amount - PlayerData.activeQuests[quest.id].kills[killIndex].initialAmount;
 				if(currentKills < questKill.amount){
 					return false;
 				} 

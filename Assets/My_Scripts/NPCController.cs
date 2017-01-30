@@ -25,6 +25,7 @@ public class NPCController : MonoBehaviour {
 		}
 	}
 
+	//This should be done in a separate
 	public void ShowQuestInfo(){
 		foreach(int i in quests){
 			if(
@@ -35,6 +36,9 @@ public class NPCController : MonoBehaviour {
 			){
 				//Show the info of the quest
 				QuestManager.instance.ShowQuestInfo(QuestManager.instance.questDictionary[quests[i]]);
+
+				//Show/Hide accept Button depending on "do we have this quest?"
+				UIManager.instance.questInfoAcceptButton.gameObject.SetActive(!PlayerData.activeQuests.ContainsKey(i));
 
 				//Set the Complete Quest Button
 				if(QuestManager.instance.IsQuestFinished(i)){

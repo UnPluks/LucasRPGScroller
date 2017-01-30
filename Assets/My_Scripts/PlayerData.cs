@@ -29,13 +29,15 @@ public static class PlayerData {
 			//set the kills of the new active quest as a new array of length of the kills in the quest
 			newActiveQuest.kills = new Quest.QuestKill[quest.task.kills.Length];
 			//for every kill in our quest.task, 
+			int killIndex = 0;
 			foreach(Quest.QuestKill questKill in quest.task.kills){
 				//Set each quest kill to a new instance of questKill
-				newActiveQuest.kills[questKill.id] = new Quest.QuestKill();
+				newActiveQuest.kills[killIndex] = new Quest.QuestKill();
 				//set the player current amount of kills of the new active quest based on the actual amount of monsters that player has killed
 				if(!monstersKilled.ContainsKey(questKill.id)) monstersKilled.Add(questKill.id, new PlayerData.MonsterKills());
 
-				newActiveQuest.kills[questKill.id].initialAmount = monstersKilled[questKill.id].amount;
+				newActiveQuest.kills[killIndex].initialAmount = monstersKilled[questKill.id].amount;
+				killIndex++;
 			}
 		}
 		activeQuests.Add(id, newActiveQuest);

@@ -7,8 +7,8 @@ public class MonsterDatabase {
 	public static Dictionary<int, string> monsters = new Dictionary<int, string>()
 	{
 		{0, "Mummy"},
-		{27, "Zombie"},
-		{99, "Ghost"}
+		{1, "Zombie"},
+		{2, "Ghost"}
 	};
 	
 }
